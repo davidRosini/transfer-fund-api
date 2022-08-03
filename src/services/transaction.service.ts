@@ -6,8 +6,8 @@ import { Transaction } from "../models/transaction.model";
 
 class TransactionService {
   async processTransaction(transactionId: string, transaction: Transaction) {
-    if (transaction.status != Status.IN_QUEUE) {
-      return;
+    if (Status.IN_QUEUE != transaction.status) {
+      return transaction.status;
     }
 
     await TransactionDao.updateTransactionStatus({
@@ -27,8 +27,8 @@ class TransactionService {
     transactionId: string,
     transaction: Transaction
   ) {
-    if (transaction.status != Status.PROCESSING) {
-      return;
+    if (Status.PROCESSING != transaction.status) {
+      return transaction.status;
     }
 
     try {

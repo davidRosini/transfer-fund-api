@@ -22,11 +22,11 @@ class TransferController {
   }
 
   async processTransfer(req: express.Request, res: express.Response) {
-    log("Processing transfer...");
+    log("Processing transfer, transactionId: " + req.body.transactionId);
     const transferStatus = await transferService.processTransfer(
       req.body.transactionId
     );
-    log("Transfer preocessed with status: " + transferStatus);
+    log("Transfer preocessed with status: " + transferStatus?.status);
     res.status(200).send(transferStatus);
   }
 }

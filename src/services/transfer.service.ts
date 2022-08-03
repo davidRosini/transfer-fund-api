@@ -1,5 +1,6 @@
 import TransferDao from "../daos/transfer.dao";
 import TransactionService from "./transaction.service";
+import ProcessTransferSender from "../broker/process.transfer.sender";
 
 import { CreateTransferDto } from "../dtos/create.transfer.dto";
 import { UpdateTransferStatusDto } from "../dtos/update.transfer.status.dto";
@@ -13,6 +14,7 @@ class TransferService {
   async create(dto: CreateTransferDto) {
     const transferFunds = this.createTransferFunds(dto);
     await TransferDao.saveTransfer(transferFunds);
+    ProcessTransferSender.sendMessage(transferFunds.transactionId);
     return { transactionId: transferFunds.transactionId };
   }
 
@@ -73,8 +75,8 @@ class TransferService {
   async processTransfer(transactionId: string) {
     let transferFunds = await this.findBy(transactionId);
 
-    if (transferFunds!.status != Status.IN_QUEUE) {
-      return;
+    if (Status.IN_QUEUE != transferFunds!.status) {
+      return transferFunds!.status;
     }
 
     transferFunds = await this.updateTransferStatus(
@@ -92,7 +94,7 @@ class TransferService {
 
   async processTransactions(transferFunds: TransferFunds) {
     if (Status.PROCESSING != transferFunds.status) {
-      return;
+      return transferFunds.status;
     }
 
     const debitTransaction = transferFunds.transactions.find(
