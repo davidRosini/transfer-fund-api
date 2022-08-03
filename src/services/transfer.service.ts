@@ -76,7 +76,7 @@ class TransferService {
     let transferFunds = await this.findBy(transactionId);
 
     if (Status.IN_QUEUE != transferFunds!.status) {
-      return transferFunds!.status;
+      return { status: transferFunds!.status };
     }
 
     transferFunds = await this.updateTransferStatus(
@@ -94,7 +94,7 @@ class TransferService {
 
   async processTransactions(transferFunds: TransferFunds) {
     if (Status.PROCESSING != transferFunds.status) {
-      return transferFunds.status;
+      return transferFunds!.status;
     }
 
     const debitTransaction = transferFunds.transactions.find(

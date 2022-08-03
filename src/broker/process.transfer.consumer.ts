@@ -24,10 +24,10 @@ class ProcessTransferConsumer {
       if (msg) {
         const transactionId = msg.content.toString();
         log("Processing transfer, transactionId: " + transactionId);
-        const transferStatus = await transferService.processTransfer(
+        const processStatus = await transferService.processTransfer(
           transactionId
         );
-        log("Transfer preocessed with status: " + transferStatus?.status);
+        log("Transfer preocessed with status: " + processStatus.status);
         channel.ack(msg);
       }
     };
