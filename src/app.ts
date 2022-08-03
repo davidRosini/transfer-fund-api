@@ -1,11 +1,16 @@
 import * as http from "http";
 import * as winston from "winston";
 import * as expressWinston from "express-winston";
+
 import cors from "cors";
-import DBService from "./common/services/mongoose.service";
 import debug from "debug";
 import express from "express";
 import helmet from "helmet";
+
+import MongoDBService from "./common/services/mongoose.service";
+import RabbitMqService from "./common/services/rabbitmq.service";
+import ProcessTransferConsumer from "./broker/process.transfer.consumer";
+import ProcessTransferSender from "./broker/process.transfer.sender";
 
 import { CommonRoutesConfig } from "./common/common.routes.config";
 import { TransferRoutes } from "./routes/transfer.routes.config";
@@ -85,7 +90,21 @@ class App {
 
   public connectToTheDatabase(host: string, port: number) {
     log("Connecting to Data Base...");
-    DBService.conectToDataBase(host, port);
+    MongoDBService.conectToDataBase(host, port);
+  }
+
+  public async setupQueue(
+    host: string,
+    port: number,
+    user: string,
+    pass: string
+  ) {
+    log("Connecting to Queue...");
+    await RabbitMqService.conectToQueueService(host, port, user, pass);
+    log("Setup sender...");
+    await ProcessTransferSender.setupSender();
+    log("Setup consumer...");
+    await ProcessTransferConsumer.setupConsumer();
   }
 }
 
