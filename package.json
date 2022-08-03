@@ -4,6 +4,8 @@
   "description": "API to transfer balance from a account to another",
   "main": "server.js",
   "scripts": {
+    "build": "tsc --build",
+    "clean": "tsc --build --clean",
     "start": "tsc && node --unhandled-rejections=strict ./dist/server.js",
     "debug": "SET DEBUG=* && npm run start",
     "dev": "ts-node-dev --respawn --pretty --transpile-only src/server.ts",

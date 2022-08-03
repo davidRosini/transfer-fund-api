@@ -24,3 +24,17 @@ if need to debug the application use command
 ```
 $ npm run debug
 ```
+
+## Docker
+
+Setup .env file with the path to the applications dependencies
+
+Build the image
+```
+$ docker build . -t <your name>/transfer-fund-api
+```
+
+Run the application
+```
+$ docker run -p 3000:3000 -d <your name>/transfer-fund-api
+```
